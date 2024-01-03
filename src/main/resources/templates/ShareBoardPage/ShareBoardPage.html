@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<table class="table table-hover align-content-center">
+    <thead>
+    <tr class="table-primary">
+        <th>idx</th>
+        <th>title</th>
+        <th>download</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="table-light" th:each="board : ${shareBoards}">
+        <td th:text="${board.idx}">1</td>
+        <td th:text="${board.title}">Title here</td>
+        <td>
+            <a th:href="@{'/download/' + ${board.idx}}" th:text="${board.oldfilename}">Download</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">페이징</td>
+    </tr>
+    <tr>
+        <td class="align-content-center" colspan="2"><label>
+            <input type="text">
+        </label>
+            <button class="btn btn-secondary btn-sm" type="submit">검색</button>
+        </td>
+        <td>
+            <button class="btn btn-secondary btn-sm" type="button">글쓰기</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

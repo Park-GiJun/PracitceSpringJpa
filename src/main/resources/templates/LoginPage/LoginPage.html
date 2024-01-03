@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-<div class="loginBox">
-    <form action="/Login" method="post"> <!-- action updated -->
-        <label><a>아이디</a>
-            <input name="inputId" type="text">
-        </label>
-        <label><a>비밀번호</a>
-            <input name="inputPwd" type="password">
-        </label>
-        <button type="submit">로그인</button>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+    <form action="/Login" class="col-md-4" method="post">
+        <fieldset>
+            <div class="form-group">
+                <label for="inputId">ID : </label>
+                <input class="form-control" id="inputId" name="inputId" placeholder="아이디" type="text">
+            </div>
+            <div class="form-group">
+                <label for="inputPwd">Password : </label>
+                <input class="form-control" id="inputPwd" name="inputPwd" placeholder="비밀번호" type="password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">로그인</button>
+            </div>
+        </fieldset>
     </form>
-</div>
+</section>
 </body>
 </html>

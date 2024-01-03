@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MainPage</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
 </head>
+<style>
+    .side_bar {
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .side_background {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #bce0fb;
+    }
+
+    a {
+        cursor: pointer;
+    }
+</style>
 <body>
-<h2>로그인 성공!</h2>
+<div class="side_bar col-4" style="width: 10%; background: #1c80cf; height: 100vh;">
+    <div class="side_background">
+        <a href="/Calender" id="calendar-link">캘린더</a>
+    </div>
+    <div class="side_background">
+        <a href="/ShareBoard" id="shareBoard-link">공유양식</a>
+    </div>
+    <div class="side_background">
+        <a href="/FreeBoard" id="freeBoard-link">게시판</a>
+    </div>
+    <div class="side_background">
+        <a>휴가신청</a>
+    </div>
+    <div class="side_background">
+        <a href="/MyInfo" id="myInfo-link">내정보</a>
+    </div>
+    <div class="side_background">
+        <a>회의실예약</a>
+    </div>
+    <div class="side_background">
+        <a>전자결제</a>
+    </div>
+    <div class="content col-8" id="content-page" style="position: absolute; left: 15%; top: 20px;"></div>
+    <script th:src="@{/js/Main.js}"></script>
+</div>
 </body>
 </html>

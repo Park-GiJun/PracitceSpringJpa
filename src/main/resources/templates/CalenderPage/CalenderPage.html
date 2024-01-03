@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        .top-right {
+            text-align: right;
+            vertical-align: top;
+            padding-right: 5px; /* 오른쪽 여백을 추가하여 더 나은 시각적 간격을 제공합니다. */
+            padding-top: 5px; /* 위쪽 여백을 추가하여 더 나은 시각적 간격을 제공합니다. */
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: white;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 30px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: black;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .diary-entry {
+            margin: 10px 0;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .diary-entry-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .diary-checkbox {
+            margin-right: 10px;
+        }
+
+        #calendar {
+            font-family: Arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #calendar th {
+            color: white;
+            padding: 8px;
+        }
+
+        #calendar td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            width: 60px;
+            height: 120px;
+        }
+
+        #calendar .today {
+            background-color: gray;
+        }
+
+        #calendar td:hover {
+            background-color: lightblue; /* 하이라이트될 배경색 */
+            cursor: pointer; /* 커서를 포인터 모양으로 변경 */
+        }
+
+        .next-month {
+            color: rgba(0, 0, 0, 0.5); /* 검정색 텍스트에 50% 투명도 */
+        }
+
+        .diary-entry-container {
+            margin-bottom: 10px; /* 각 일정 항목 사이의 여백 */
+        }
+
+        .form-check-input {
+            margin-top: 0; /* 체크박스의 상단 여백 제거 */
+            margin-bottom: 0; /* 체크박스의 하단 여백 제거 */
+        }
+
+        .diary-text {
+            margin-top: 0; /* 텍스트의 상단 여백 제거 */
+            margin-bottom: 0; /* 텍스트의 하단 여백 제거 */
+        }
+
+        .schedule-item {
+            background-color: #f0f0f0;
+            margin-top: 2px;
+            padding: 2px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="row">
+        <div class="col-md-1">
+            <h4 id="displayMonth"></h4>
+        </div>
+        <div class="col-md-5">
+            <div id="secBtn">
+                <button class="btn btn-secondary btn-sm" onclick="company()">회사일정</button>
+                <button class="btn btn-secondary btn-sm" onclick="team()">부서일정</button>
+                <button class="btn btn-secondary btn-sm" onclick="personal()">개인일정</button>
+                <!--  <button class="btn btn-secondary btn-sm" onclick="vacation()">부서휴가자</button> -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex">
+                <label for="selectYear"></label><select class="form-select form-select-sm me-2" id="selectYear" onchange="updateCalendar()">
+            </select>
+                <label for="selectMonth"></label><select class="form-select form-select-sm" id="selectMonth" onchange="updateCalendar()">
+            </select>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="calender">
+        <div id="calendar-container">
+            <table class="table table-hover" id="calendar">
+                <thead class="table-info" style="text-align: center;">
+                <tr>
+                    <th>일</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                </tr>
+                </thead>
+                <tbody class="table-light">
+                </tbody>
+            </table>
+        </div>
+        <div class="sidebar" id="sidebar">
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                <h2 class="text-info" id="headerDate"></h2>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                <button class="btn btn-secondary btn-sm" id="addDiaryButton" onclick="addDiary()">일정 생성</button>
+                <button class="btn btn-secondary btn-sm" id="deleteDiaryButton" onclick="deleteDiary()">일정 삭제</button>
+                <button class="btn btn-primary btn-sm" id="sidebarToggle" onclick="closeSidebar()">닫기</button>
+            </div>
+            <div id="sidebarContent"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/Calender.js}"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FreeBoard Write</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<form action="/FreeBoard/WritePage/Write" id="freeBoardForm" method="post" th:object="${freeBoard}">
+    <table class="table table-hover align-content-center">
+        <tr class="table-primary">
+            <th colspan="2">
+                <label>
+                    <input class="form-control-plaintext small col-12" placeholder="제목을 입력하세요." th:field="*{title}" type="text">
+                </label>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <label>
+                    <textarea class="form-control col-12" placeholder="내용을 입력하세요" rows="15" style="width: max-content; background: white" th:field="*{content}"></textarea>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>
+                    <input class="form-control" th:field="*{password}" type="password" />
+                </label>
+            </td>
+            <td>
+                <button class="btn btn-secondary btn-sm" onclick="Write()" type="button">글쓰기</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<script th:src="@{/js/FreeBoard.js}"></script>
+</body>
+</html>
