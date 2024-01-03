@@ -73,9 +73,9 @@ function generateCalendar(year, month) {
                         cell.addEventListener('click', function () {
                             clickedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
                             console.log(clickedDate);
-                            var headerDate = document.getElementById('headerDate');
+                            const headerDate = document.getElementById('headerDate');
                             headerDate.textContent = clickedDate;
-                            var sidebar = document.getElementById('sidebar');
+                            const sidebar = document.getElementById('sidebar');
                             sidebar.style.width = '250px';
 
                             updateSidebarWithSchedules(clickedDate);
@@ -159,14 +159,14 @@ function updateSidebarWithSchedules(date) {
     if (dailySchedules) {
         dailySchedules.forEach(schedule => {
 
-            var entryContainer = document.createElement('div');
+            const entryContainer = document.createElement('div');
             entryContainer.classList.add('diary-entry-container');
 
-            var newCheckBox = document.createElement('input');
+            const newCheckBox = document.createElement('input');
             newCheckBox.type = 'checkbox';
             newCheckBox.classList.add('form-check-input');
 
-            var newEntry = document.createElement('h5');
+            const newEntry = document.createElement('h5');
             newEntry.textContent = schedule;
             newEntry.classList.add('text-success', 'diary-text');
             newCheckBox.setAttribute('data-id', schedule);
@@ -183,20 +183,20 @@ function updateSidebarWithSchedules(date) {
 }
 
 function addDiary() {
-    var inputText = prompt(clickedDate + "의 일정을 입력해주세요.");
+    const inputText = prompt(clickedDate + "의 일정을 입력해주세요.");
 
     if (inputText) {
 
-        var sidebar = document.getElementById('sidebarContent');
+        const sidebar = document.getElementById('sidebarContent');
 
-        var entryContainer = document.createElement('div');
+        const entryContainer = document.createElement('div');
         entryContainer.classList.add('diary-entry-container');
 
-        var newCheckBox = document.createElement('input');
+        const newCheckBox = document.createElement('input');
         newCheckBox.type = 'checkbox';
         newCheckBox.classList.add('form-check-input');
 
-        var newEntry = document.createElement('h5');
+        const newEntry = document.createElement('h5');
         newEntry.textContent = inputText;
         newEntry.classList.add('text-success', 'diary-text');
         newCheckBox.setAttribute('data-id', inputText);
@@ -224,7 +224,7 @@ function addDiary() {
 
 
 function deleteDiary() {
-    var entries = document.getElementsByClassName('diary-entry-container');
+    const entries = document.getElementsByClassName('diary-entry-container');
     for (let i = entries.length - 1; i >= 0; i--) {
         let entry = entries[i];
         let checkBox = entry.querySelector('input[type="checkbox"]');
@@ -244,7 +244,7 @@ function deleteDiary() {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    location.reload();
+                    closeSidebar()
 
                     if (data.status === 'success') {
                         sidebar.removeChild(entry);
@@ -269,7 +269,6 @@ function updateButtonsVisibility() {
 }
 
 function company() {
-    init()
     section = 'company';
     console.log(section);
     getSchedule();
@@ -277,7 +276,6 @@ function company() {
 }
 
 function team() {
-    init()
     section = 'team';
     console.log(section);
     getSchedule();
@@ -285,7 +283,6 @@ function team() {
 }
 
 function personal() {
-    init();
     section = 'personal';
     console.log(section);
     getSchedule();
@@ -320,18 +317,16 @@ window.onload = function () {
 
 
 function getSchedule() {
-    // Ensure selectedYear and selectedMonth are defined and valid
     selectedYear = selectedYear || new Date().getFullYear();
     selectedMonth = selectedMonth !== undefined ? selectedMonth : new Date().getMonth();
 
-    // Define the data you want to send
     const requestData = {
         status: section,
         year: selectedYear,
         month: selectedMonth
     };
 
-    // Perform the fetch request
+
     fetch('../Controller/getSchedule.do', {
         method: 'POST',
         headers: {
