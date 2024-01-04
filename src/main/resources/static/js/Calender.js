@@ -21,7 +21,7 @@ function generateCalendar(year, month) {
 
     const displayMonth = document.getElementById('displayMonth');
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    displayMonth.textContent = monthNames[currentMonth];
+    displayMonth.textContent = monthNames[parseInt(currentMonth)];
 
     const calendarBody = document.getElementById('calendar').getElementsByTagName('tbody')[0];
     calendarBody.innerHTML = '';
@@ -71,7 +71,7 @@ function generateCalendar(year, month) {
 
                     (function (currentDate) {
                         cell.addEventListener('click', function () {
-                            clickedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+                            clickedDate = `${currentYear}-${String(currentMonth+1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
                             console.log(clickedDate);
                             const headerDate = document.getElementById('headerDate');
                             headerDate.textContent = clickedDate;
@@ -140,22 +140,22 @@ function closeSidebar() {
 
 function updateCalendar() {
     selectedYear = parseInt(document.getElementById('selectYear').value);
-    selectedMonth = parseInt(document.getElementById('selectMonth').value) - 1; // 월은 0-11로 표현됩니다.
+    selectedMonth = parseInt(document.getElementById('selectMonth').value) - 1;
     schedules = {};
-    generateCalendar(selectedYear, selectedMonth);
+    if(section === 'company'){
+        getCompanySchedule();
+    } else {
+        generateCalendar(selectedYear, selectedMonth);
+    }
 }
 
 function updateSidebarWithSchedules(date) {
 
-    // 사이드바 엘리먼트 가져오기
     let sidebar = document.getElementById('sidebarContent');
-    // 사이드바 초기화
     sidebar.innerHTML = '';
-    // 선택된 날짜의 일정 가져오기
-    let formattedDate = date.slice(-2); // "YYYY-MM-DD" 형식에서 DD 부분만 가져옴
-    let dailySchedules = schedules[formattedDate]; // 이 날짜의 일정 목록 조회
+    let formattedDate = date.slice(-2);
+    let dailySchedules = schedules[formattedDate];
 
-    // 일정이 있다면 사이드바에 추가
     if (dailySchedules) {
         dailySchedules.forEach(schedule => {
 
@@ -271,21 +271,19 @@ function updateButtonsVisibility() {
 function company() {
     section = 'company';
     console.log(section);
-    getSchedule();
+    getCompanySchedule();
     updateButtonsVisibility();
 }
 
 function team() {
     section = 'team';
     console.log(section);
-    getSchedule();
     updateButtonsVisibility();
 }
 
 function personal() {
     section = 'personal';
     console.log(section);
-    getSchedule();
     updateButtonsVisibility();
 }
 
@@ -293,7 +291,6 @@ function init() {
     console.log("init");
     generateCalendar();
     generateSelect();
-    getSchedule();
     updateButtonsVisibility();
 
     const today = new Date();
@@ -315,37 +312,58 @@ window.onload = function () {
     setTimeout(company, 500);  // Delay of 500 milliseconds
 };
 
+function getCompanySchedule() {
+    const selectedYear = String(document.getElementById('selectYear').value);
+    const selectedMonth = String(((document.getElementById('selectMonth').value)-1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1 ): document.getElementById('selectMonth').value -1);
 
-function getSchedule() {
-    selectedYear = selectedYear || new Date().getFullYear();
-    selectedMonth = selectedMonth !== undefined ? selectedMonth : new Date().getMonth();
+    console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth);
 
-    const requestData = {
-        status: section,
-        year: selectedYear,
-        month: selectedMonth
-    };
+    const queryString = `?selectedYear=${selectedYear}&selectedMonth=${selectedMonth}`;
 
-
-    fetch('../Controller/getSchedule.do', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
+    fetch('/CompanySchedule' + queryString, {
+        method: 'GET'
     })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Server response wasn\'t OK');
             }
-            return response.json();
         })
         .then(data => {
             console.log(data);
-            schedules = data;  // 서버로부터 받은 일정 데이터 저장
+            schedules = data;
             generateCalendar(selectedYear, selectedMonth);
         })
         .catch(error => {
-            console.error('Error fetching schedule:', error);
+            console.error('Fetch Error:', error);
+        });
+}
+
+function getTeamSchedule() {
+    const selectedYear = String(document.getElementById('selectYear').value);
+    const selectedMonth = String(((document.getElementById('selectMonth').value)-1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1 ): document.getElementById('selectMonth').value -1);
+
+    console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth);
+
+    const queryString = `?selectedYear=${selectedYear}&selectedMonth=${selectedMonth}`;
+
+    fetch('/TeamSchedule' + queryString, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Server response wasn\'t OK');
+            }
+        })
+        .then(data => {
+            console.log(data);
+            schedules = data;
+            generateCalendar(selectedYear, selectedMonth);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
         });
 }

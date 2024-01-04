@@ -14,5 +14,7 @@ public class Employee {
     private String empPwd;
     private String empName;
     private String empEmail;
-    private int empGrade;
+    private int empPosition;
+    private String emp_department;
+    private String emp_team;
 }

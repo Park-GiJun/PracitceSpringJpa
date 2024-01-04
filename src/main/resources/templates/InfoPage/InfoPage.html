@@ -6,6 +6,94 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-내정보 페이지
+<div class="row">
+    <div class="col-7">
+        <div class="profile">
+            <div class="row">
+                <div class="col-4" style="background: #bce0fb"></div>
+                <div class="col-8">
+                    <ul>
+                        <li>이름 : <p> 박기준 </p></li>
+                        <li>사번 : <p> 980320 </p></li>
+                        <li>이메일 : <p> tpgj98@naver.com </p></li>
+                        <li>전화번호 : <p> 010-1234-5678 </p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="Salary">
+            <div class="form-group">
+                <label class="form-label mt-4">
+                    <select class="form-select" th:value="year">
+                        <option value="2023">2023</option>
+                    </select>
+                </label>
+                <label class="form-label mt-4">
+                    <select class="form-select" th:value="month">
+                        <option value="1">1월</option>
+                        <option value="2">2월</option>
+                        <option value="3">3월</option>
+                        <option value="4">4월</option>
+                        <option value="5">5월</option>
+                        <option value="6">6월</option>
+                        <option value="7">7월</option>
+                        <option value="8">8월</option>
+                        <option value="9">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
+                    </select>
+                </label>
+            </div>
+            <div class="salaryInfo">
+                <table class="table table-hover" th:field="salaryInfo">
+                    <thead class="table-info">
+                    <tr>
+                        <th>항목</th>
+                        <th>금액</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-light">
+                    <tr>
+                        <td>급여</td>
+                        <td>$1,200</td>
+                    </tr>
+                    <tr>
+                        <td>인센티브</td>
+                        <td>$1,000</td>
+                    </tr>
+                    <tr>
+                        <td>추가근무수당</td>
+                        <td>$200</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="attendCalender">
+            <table class="table table-hover" th:field="attendCalender">
+                <thead class="table-dark">
+                <tr>
+                    <th>일</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                </tr>
+                </thead>
+                <tbody class="table-light">
+                </tbody>
+            </table>
+        </div>
+        <div class="row align-content-center">
+            <button class="btn btn-primary btn-sm col-5" type="button">출근</button>
+            <button class="btn btn-warning btn-sm col-5" type="button">퇴근</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

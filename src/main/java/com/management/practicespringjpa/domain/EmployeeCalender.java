@@ -9,10 +9,9 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name = "companyCalender")
-public class CompanyCalender {
-
+@Table(name = "employeeCalender")
+public class EmployeeCalender {
     @Id
-    private LocalDate date;
     private String schedule;
+    private LocalDate date;
 }

@@ -16,6 +16,7 @@ public class SpringConfig {
     private final ShareBoardRepository shareBoardRepository;
     private final FreeBoardRepository freeBoardRepository;
 
+
     public SpringConfig(EmployeeRepository employeeRepository, ShareBoardRepository shareBoardRepository, FreeBoardRepository freeBoardRepository) {
         this.employeeRepository = employeeRepository;
         this.shareBoardRepository = shareBoardRepository;
@@ -32,7 +33,6 @@ public class SpringConfig {
 
     @Bean
     public FreeBoardService freeBoardService() { return new FreeBoardService(freeBoardRepository); }
-
 
 
 }

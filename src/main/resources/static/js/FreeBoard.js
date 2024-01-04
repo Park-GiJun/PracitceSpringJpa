@@ -1,6 +1,7 @@
 function freeBoardWrite() {
     console.log("freeBoardWrite clicked");
-    fetch('/FreeBoard/WritePage').then(function (response) {
+    fetch('/FreeBoard/WritePage')
+        .then(function (response) {
         return response.text();
     }).then(function (html) {
         document.getElementById('content-page').innerHTML = html;
@@ -32,7 +33,8 @@ function Write() {
 }
 
 function loadBoardList() {
-    fetch('/FreeBoard').then(function (response) {
+    fetch('/FreeBoard')
+        .then(function (response) {
         return response.text();
     }).then(function (html) {
         document.getElementById('content-page').innerHTML = html;
