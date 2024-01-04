@@ -24,6 +24,10 @@
     }
 </style>
 <body>
+<div class="hidden-information">
+    <input id="emp_department" th:value="${emp_info.getEmp_department()}" type="hidden">
+    <input id="emp_team" th:value="${emp_info.getEmp_team()}" type="hidden">
+</div>
 <div class="side_bar col-4" style="width: 10%; background: #1c80cf; height: 100vh;">
     <div class="side_background">
         <a id="temperatureValue" onclick="temperature()">

@@ -27,18 +27,20 @@ public class CalenderController {
 
     @GetMapping("/CompanySchedule")
     public String CompanySchedule(@RequestParam("selectedYear") int year, @RequestParam("selectedMonth") int month) {
-        System.out.println("CompanySchedule : " + year + " " + (month+1));
-        Map<String, List<String>> companyScheduleList = companyCalenderService.getCompanyCalenderList(year, month+1);
-
+        System.out.println("CompanySchedule : " + year + " " + (month + 1));
+        Map<String, List<String>> companyScheduleList = companyCalenderService.getCompanyCalenderList(year, month + 1);
         String json = gson.toJson(companyScheduleList);
-
         System.out.println("Check Json : " + json);
         return json;
     }
 
     @GetMapping("/TeamSchedule")
-    public String TeamSchedule() {
-        return "TeamSchedule";
+    public String TeamSchedule(@RequestParam("selectedYear") int year, @RequestParam("selectedMonth") int month, @RequestParam("department") String department) {
+        System.out.println("CompanySchedule : " + year + " " + (month + 1));
+        Map<String, List<String>> teamScheduleList = teamCalenderService.getTeamCalenderList(year, month + 1, department);
+        String json = gson.toJson(teamScheduleList);
+        System.out.println("check Json : " + json);
+        return json;
     }
 
     @GetMapping("/EmployeeSchedule")
@@ -48,6 +50,11 @@ public class CalenderController {
 
     @PostMapping("/EmployeeSchedule/Save")
     public String EmployeeScheduleSave() {
+        return "EmployeeSchedule";
+    }
+
+    @PostMapping("/EmployeeSchedule/Delete")
+    public String EmployeeScheduleDelete() {
         return "EmployeeSchedule";
     }
 }

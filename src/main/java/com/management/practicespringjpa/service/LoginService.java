@@ -19,4 +19,8 @@ public class LoginService {
         }
         return false;
     }
+
+    public Employee getEmpIdAndEmpDepartmentAndEmpTeam(int empId) {
+        return employeeRepository.findByEmpId(empId);
+    }
 }

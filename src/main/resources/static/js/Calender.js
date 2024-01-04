@@ -71,7 +71,7 @@ function generateCalendar(year, month) {
 
                     (function (currentDate) {
                         cell.addEventListener('click', function () {
-                            clickedDate = `${currentYear}-${String(currentMonth+1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+                            clickedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
                             console.log(clickedDate);
                             const headerDate = document.getElementById('headerDate');
                             headerDate.textContent = clickedDate;
@@ -137,12 +137,17 @@ function closeSidebar() {
     }
 }
 
+function superCloseSidebar() {
+    let sidebar = document.getElementById('sidebar');
+        sidebar.style.width = '0';
+}
+
 
 function updateCalendar() {
     selectedYear = parseInt(document.getElementById('selectYear').value);
-    selectedMonth = parseInt(document.getElementById('selectMonth').value) - 1;
+    selectedMonth = parseInt(document.getElementById('selectMonth').value);
     schedules = {};
-    if(section === 'company'){
+    if (section === 'company') {
         getCompanySchedule();
     } else {
         generateCalendar(selectedYear, selectedMonth);
@@ -192,20 +197,22 @@ function addDiary() {
         const entryContainer = document.createElement('div');
         entryContainer.classList.add('diary-entry-container');
 
-        const newCheckBox = document.createElement('input');
-        newCheckBox.type = 'checkbox';
-        newCheckBox.classList.add('form-check-input');
+        if (section === 'personal') {
+            const newCheckBox = document.createElement('input');
+            newCheckBox.type = 'checkbox';
+            newCheckBox.classList.add('form-check-input');
+            newCheckBox.setAttribute('data-id', inputText);
+            entryContainer.appendChild(newCheckBox);
+        }
 
         const newEntry = document.createElement('h5');
         newEntry.textContent = inputText;
         newEntry.classList.add('text-success', 'diary-text');
-        newCheckBox.setAttribute('data-id', inputText);
 
         entryContainer.style.display = 'flex';
         entryContainer.style.alignItems = 'center';
         entryContainer.style.gap = '10px';
 
-        entryContainer.appendChild(newCheckBox);
         entryContainer.appendChild(newEntry);
         sidebar.appendChild(entryContainer);
 
@@ -271,6 +278,7 @@ function updateButtonsVisibility() {
 function company() {
     section = 'company';
     console.log(section);
+    superCloseSidebar();
     getCompanySchedule();
     updateButtonsVisibility();
 }
@@ -278,18 +286,21 @@ function company() {
 function team() {
     section = 'team';
     console.log(section);
+    superCloseSidebar();
+    getTeamSchedule();
     updateButtonsVisibility();
+
 }
 
 function personal() {
     section = 'personal';
     console.log(section);
+    superCloseSidebar();
     updateButtonsVisibility();
 }
 
 function init() {
     console.log("init");
-    generateCalendar();
     generateSelect();
     updateButtonsVisibility();
 
@@ -314,7 +325,7 @@ window.onload = function () {
 
 function getCompanySchedule() {
     const selectedYear = String(document.getElementById('selectYear').value);
-    const selectedMonth = String(((document.getElementById('selectMonth').value)-1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1 ): document.getElementById('selectMonth').value -1);
+    const selectedMonth = String(((document.getElementById('selectMonth').value) - 1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1) : document.getElementById('selectMonth').value - 1);
 
     console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth);
 
@@ -342,11 +353,12 @@ function getCompanySchedule() {
 
 function getTeamSchedule() {
     const selectedYear = String(document.getElementById('selectYear').value);
-    const selectedMonth = String(((document.getElementById('selectMonth').value)-1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1 ): document.getElementById('selectMonth').value -1);
+    const selectedMonth = String(((document.getElementById('selectMonth').value) - 1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1) : document.getElementById('selectMonth').value - 1);
+    const department = String(document.getElementById('emp_department').value)
 
-    console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth);
+    console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth + " Department: " + department);
 
-    const queryString = `?selectedYear=${selectedYear}&selectedMonth=${selectedMonth}`;
+    const queryString = `?selectedYear=${selectedYear}&selectedMonth=${selectedMonth}&department=${department}`;
 
     fetch('/TeamSchedule' + queryString, {
         method: 'GET'
