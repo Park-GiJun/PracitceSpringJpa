@@ -13,10 +13,10 @@
                 <div class="col-4" style="background: #bce0fb"></div>
                 <div class="col-8">
                     <ul>
-                        <li>이름 : <p> 박기준 </p></li>
-                        <li>사번 : <p> 980320 </p></li>
-                        <li>이메일 : <p> tpgj98@naver.com </p></li>
-                        <li>전화번호 : <p> 010-1234-5678 </p></li>
+                        <li>이름 : <a th:text="${session.emp_info.getEmpName()}">이름들어갑니다</a></li>
+                        <li>직급 : <a th:text="${session.emp_info.getEmp_Position()}">직급들어갑니다.</a></li>
+                        <li>사번 : <a th:text="${session.emp_info.getEmpId()}">사번들어갑니다</a></li>
+                        <li>이메일 : <a th:text="${session.emp_info.getEmpEmail()}">이메일들어갑니다</a></li>
                     </ul>
                 </div>
             </div>

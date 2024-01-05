@@ -58,15 +58,28 @@ function generateCalendar(year, month) {
                     }
 
                     let formattedDate = String(date).padStart(2, '0');
-                    let scheduleList = schedules[formattedDate]; // 이 날짜의 일정 목록 조회
-
+                    let scheduleList = schedules[formattedDate];
                     if (scheduleList) {
-                        scheduleList.forEach(schedule => {
-                            let scheduleEl = document.createElement('div');
-                            scheduleEl.textContent = schedule;
-                            scheduleEl.classList.add('schedule-item'); // 스타일링을 위한 클래스
-                            cell.appendChild(scheduleEl);
-                        });
+                        if (scheduleList.length <= 3) {
+                            scheduleList.forEach(schedule => {
+                                let scheduleEl = document.createElement('div');
+                                scheduleEl.textContent = schedule;
+                                scheduleEl.classList.add('schedule-item');
+                                cell.appendChild(scheduleEl);
+                            });
+                        } else {
+                            for (let i = 0; i < 2; i++) {
+                                let scheduleEl = document.createElement('div');
+                                scheduleEl.textContent = scheduleList[i];
+                                scheduleEl.classList.add('schedule-item');
+                                cell.appendChild(scheduleEl);
+                            }
+                            let remainingCount = scheduleList.length - 2;
+                            let moreScheduleEl = document.createElement('div');
+                            moreScheduleEl.textContent = `+${remainingCount}`;
+                            moreScheduleEl.classList.add('schedule-item');
+                            cell.appendChild(moreScheduleEl);
+                        }
                     }
 
                     (function (currentDate) {
@@ -139,13 +152,13 @@ function closeSidebar() {
 
 function superCloseSidebar() {
     let sidebar = document.getElementById('sidebar');
-        sidebar.style.width = '0';
+    sidebar.style.width = '0';
 }
 
 
 function updateCalendar() {
     selectedYear = parseInt(document.getElementById('selectYear').value);
-    selectedMonth = parseInt(document.getElementById('selectMonth').value);
+    selectedMonth = parseInt(document.getElementById('selectMonth').value) - 1;
     schedules = {};
     if (section === 'company') {
         getCompanySchedule();
@@ -166,21 +179,21 @@ function updateSidebarWithSchedules(date) {
 
             const entryContainer = document.createElement('div');
             entryContainer.classList.add('diary-entry-container');
-
-            const newCheckBox = document.createElement('input');
-            newCheckBox.type = 'checkbox';
-            newCheckBox.classList.add('form-check-input');
-
+            if (section === 'personal') {
+                const newCheckBox = document.createElement('input');
+                newCheckBox.type = 'checkbox';
+                newCheckBox.classList.add('form-check-input');
+                newCheckBox.setAttribute('data-id', schedule);
+                entryContainer.appendChild(newCheckBox);
+            }
             const newEntry = document.createElement('h5');
             newEntry.textContent = schedule;
-            newEntry.classList.add('text-success', 'diary-text');
-            newCheckBox.setAttribute('data-id', schedule);
+            newEntry.classList.add('text-primary-emphasis', 'diary-text');
 
             entryContainer.style.display = 'flex';
             entryContainer.style.alignItems = 'center';
             entryContainer.style.gap = '10px';
 
-            entryContainer.appendChild(newCheckBox);
             entryContainer.appendChild(newEntry);
             sidebar.appendChild(entryContainer);
         });
@@ -189,7 +202,8 @@ function updateSidebarWithSchedules(date) {
 
 function addDiary() {
     const inputText = prompt(clickedDate + "의 일정을 입력해주세요.");
-
+    const emp_id = String(document.getElementById('emp_id').value)
+    console.log("inputText: " + inputText + " emp_id: " + emp_id);
     if (inputText) {
 
         const sidebar = document.getElementById('sidebarContent');
@@ -207,7 +221,7 @@ function addDiary() {
 
         const newEntry = document.createElement('h5');
         newEntry.textContent = inputText;
-        newEntry.classList.add('text-success', 'diary-text');
+        newEntry.classList.add('text-primary-emphasis', 'diary-text');
 
         entryContainer.style.display = 'flex';
         entryContainer.style.alignItems = 'center';
@@ -215,16 +229,20 @@ function addDiary() {
 
         entryContainer.appendChild(newEntry);
         sidebar.appendChild(entryContainer);
+        console.log("check inputText: " + inputText + " emp_id: " + emp_id);
 
-        fetch('../Controller/TestAdd.do', {
+        fetch('/EmployeeSchedule/Save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({date: clickedDate, text: inputText})
+            body: JSON.stringify({emp_Id: emp_id, date: clickedDate, text: inputText})
         })
-            .then(response => response.json())
-            .then(data => console.log(data))
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                personal();
+            })
             .catch(error => console.error('Error:', error));
     }
 }
@@ -236,23 +254,23 @@ function deleteDiary() {
         let entry = entries[i];
         let checkBox = entry.querySelector('input[type="checkbox"]');
         if (checkBox && checkBox.checked) {
+            const emp_id = String(document.getElementById('emp_id').value)
+            let text = checkBox.getAttribute('data-id');
 
-            let scheduleId = checkBox.getAttribute('data-id');
+            console.log("check inputText: " + text + " emp_id: " + emp_id);
 
-            console.log(scheduleId);
-
-            fetch('../Controller/TestDelete.do', {
+            fetch('/EmployeeSchedule/Delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id: scheduleId})
+                body: JSON.stringify({emp_Id: emp_id, date: clickedDate, text: text})
             })
-                .then(response => response.json())
+                .then(response => response.text())
                 .then(data => {
                     console.log(data);
-                    closeSidebar()
-
+                    superCloseSidebar();
+                    getEmployeeSchedule();
                     if (data.status === 'success') {
                         sidebar.removeChild(entry);
                     }
@@ -296,6 +314,7 @@ function personal() {
     section = 'personal';
     console.log(section);
     superCloseSidebar();
+    getEmployeeSchedule();
     updateButtonsVisibility();
 }
 
@@ -314,7 +333,7 @@ function init() {
     console.log("기본 설정된 오늘 날짜: ", clickedDate);
     const selectedYear = parseInt(document.getElementById('selectYear').value);
     const selectedMonth = parseInt(document.getElementById('selectMonth').value) - 1; // 월은 0-11로 표현됩니다.
-    generateCalendar(selectedYear, selectedMonth);
+    getCompanySchedule();
 };
 
 window.onload = function () {
@@ -344,7 +363,7 @@ function getCompanySchedule() {
         .then(data => {
             console.log(data);
             schedules = data;
-            generateCalendar(selectedYear, selectedMonth);
+            generateCalendar(selectedYear, parseInt(selectedMonth));
         })
         .catch(error => {
             console.error('Fetch Error:', error);
@@ -373,7 +392,36 @@ function getTeamSchedule() {
         .then(data => {
             console.log(data);
             schedules = data;
-            generateCalendar(selectedYear, selectedMonth);
+            generateCalendar(selectedYear, parseInt(selectedMonth));
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}
+
+function getEmployeeSchedule() {
+    const selectedYear = String(document.getElementById('selectYear').value);
+    const selectedMonth = String(((document.getElementById('selectMonth').value) - 1) < 10 ? '0' + (document.getElementById('selectMonth').value - 1) : document.getElementById('selectMonth').value - 1);
+    const emp_id = String(document.getElementById('emp_id').value)
+
+    console.log("Selected Year: ", selectedYear + " Selected Month: " + selectedMonth + " emp_id: " + emp_id);
+
+    const queryString = `?selectedYear=${selectedYear}&selectedMonth=${selectedMonth}&emp_id=${emp_id}`;
+
+    fetch('/EmployeeSchedule' + queryString, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Server response wasn\'t OK');
+            }
+        })
+        .then(data => {
+            console.log(data);
+            schedules = data;
+            generateCalendar(selectedYear, parseInt(selectedMonth));
         })
         .catch(error => {
             console.error('Fetch Error:', error);

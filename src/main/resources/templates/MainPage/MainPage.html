@@ -25,6 +25,7 @@
 </style>
 <body>
 <div class="hidden-information">
+    <input id="emp_id" th:value="${session.emp_info.getEmpId()}" type="hidden">
     <input id="emp_department" th:value="${session.emp_info.getEmp_department()}" type="hidden">
     <input id="emp_team" th:value="${session.emp_info.getEmp_team()}" type="hidden">
 </div>
