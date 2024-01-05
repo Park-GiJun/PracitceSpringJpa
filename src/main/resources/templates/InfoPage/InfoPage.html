@@ -73,7 +73,12 @@
     </div>
     <div class="col-5">
         <div class="attendCalender">
-            <table class="table table-hover" th:field="attendCalender">
+            <div class="form-group row">
+                <button class="btn btn-outline-dark btn-sm col-3">이전달</button>
+                <h5 class="col-6" id="displayDate" style="text-align: center">날짜</h5>
+                <button class="btn btn-outline-dark btn-sm col-3">다음달</button>
+            </div>
+            <table class="table table-hover" style="text-align: center" th:field="attendCalender">
                 <thead class="table-dark">
                 <tr>
                     <th>일</th>
@@ -85,7 +90,7 @@
                     <th>토</th>
                 </tr>
                 </thead>
-                <tbody class="table-light">
+                <tbody class="table-light" id="attendanceTable">
                 </tbody>
             </table>
         </div>
